@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SmartCertify.Infrastructure;
 
 namespace SmartCertify.API.Controllers
 {
@@ -6,28 +7,39 @@ namespace SmartCertify.API.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
+        private static readonly string[] Summaries =
+        [
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot1", "Sweltering", "Scorching"
-        };
+        ];
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly SmartCertifyContext smartCertifyContext;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, SmartCertifyContext smartCertifyContext)
         {
             _logger = logger;
+            this.smartCertifyContext = smartCertifyContext;
         }
 
+        //[HttpGet(Name = "GetWeatherForecast")]
+        //public IEnumerable<WeatherForecast> Get()
+        //{
+        //    //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        //    //{
+        //    //    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+        //    //    TemperatureC = Random.Shared.Next(-20, 55),
+        //    //    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        //    //})
+        //    //.ToArray();
+        //    var model = smartCertifyContext.UserProfiles.ToList();
+        //    return (IEnumerable<WeatherForecast>)Ok(model);
+        //}
+
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IActionResult Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var model = smartCertifyContext.UserProfiles.ToList();
+            return Ok(model);
         }
     }
 }
