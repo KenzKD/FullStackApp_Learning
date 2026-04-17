@@ -29,14 +29,13 @@
         }
     </div>
 
-    <!-- *ngIf with ng-template for Else -->
+    <!-- Conditional Rendering with @if -->
     <div class="mt-3">
-
-        <ng-container *ngIf="isWelcomeVisible; else noWelcome">
-            <p class="text-success mt-2">Welcome to our Angular app!</p>
-        </ng-container>
-        <ng-template #noWelcome>
-            <p class="text-danger mt-2">The welcome message is hidden.</p>
-        </ng-template>
+        <button class="btn btn-primary" (click)="toggleWelcome()">Toggle Welcome Message</button>
+        @if (isWelcomeVisible) {
+        <p class="text-success mt-2">Welcome to our Angular app!</p>}
+        @else {
+        <p class="text-danger mt-2">The welcome message is hidden.</p>
+        }
     </div>
 </div>

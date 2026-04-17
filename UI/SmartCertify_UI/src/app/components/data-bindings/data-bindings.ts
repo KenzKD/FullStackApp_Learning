@@ -18,7 +18,7 @@ appDescription = 'An amazing platform to test and certify your knowledge.';
 // Two-Way Binding
 username = '';
 
-// *ngIf, *ngElse
+// @if, @else
 isWelcomeVisible = true;
 
 toggleWelcome() {
