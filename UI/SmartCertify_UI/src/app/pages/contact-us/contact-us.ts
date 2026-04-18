@@ -1,16 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contact-us',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './contact-us.html',
   styleUrl: './contact-us.css'
 })
 export class ContactUs implements OnInit {
   contactForm!: FormGroup;
-  userId=0;
+  userId = 0;
   constructor(
     private fb: FormBuilder
   ) {
@@ -32,7 +31,7 @@ export class ContactUs implements OnInit {
 
   onSubmit() {
     if (this.contactForm.valid) {
-    
+
     }
   }
 }

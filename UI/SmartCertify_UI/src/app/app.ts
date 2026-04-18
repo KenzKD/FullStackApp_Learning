@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from "./pages/header/header";
 import { Footer } from "./pages/footer/footer";
-import { DataBindings } from './components/data-bindings/data-bindings';
 
 @Component({
   selector: 'app-root',
