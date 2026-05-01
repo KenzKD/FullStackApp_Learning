@@ -1,6 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using SmartCertify.Application;
+using SmartCertify.Application.Interfaces.Courses;
+using SmartCertify.Application.Services;
 using SmartCertify.Infrastructure;
 
 namespace SmartCertify.API
@@ -22,12 +25,30 @@ namespace SmartCertify.API
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            //AutoMapper.Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+            //builder.Services.AddAutoMapper(typeof(MappingProfile));
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ICourseService, CourseService>();
+
+
+            // In production, modify this with the actual domains you want to allow
+            builder.Services.AddCors
+            (Options =>
+                {
+                    Options.AddPolicy("default", policy =>
+                    {
+                        policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    });
+                }
+            );
+
+            var app = builder.Build();
+            app.UseCors("default");
 
             #endregion Services Config
 
             #region Middleware Config
-            var app = builder.Build();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
