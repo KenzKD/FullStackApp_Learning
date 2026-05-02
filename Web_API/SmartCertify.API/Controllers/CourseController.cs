@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCertify.Application.DTOs;
 using SmartCertify.Application.Interfaces.Courses;
@@ -10,10 +11,14 @@ namespace SmartCertify.API.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _service;
+        private readonly IValidator<CreateCourseDTO> createCourseValidator;
+        private readonly IValidator<UpdateCourseDTO> updateCourseValidator;
 
-        public CourseController(ICourseService service)
+        public CourseController(ICourseService service, IValidator<CreateCourseDTO> createCourseValidator, IValidator<UpdateCourseDTO> updateCourseValidator)
         {
             this._service = service;
+            this.createCourseValidator = createCourseValidator;
+            this.updateCourseValidator = updateCourseValidator;
         }
 
         /// <summary>
@@ -66,6 +71,12 @@ namespace SmartCertify.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO createCourseDTO)
         {
+            var validationResult = await createCourseValidator.ValidateAsync(createCourseDTO);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             await _service.AddCourseAsync(createCourseDTO);
             return CreatedAtAction(nameof(GetCourse), new { id = createCourseDTO.Title }, createCourseDTO);
         }
@@ -85,6 +96,11 @@ namespace SmartCertify.API.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateCourse(int id, [FromBody] UpdateCourseDTO updateCourseDTO)
         {
+            var validationResult = await updateCourseValidator.ValidateAsync(updateCourseDTO);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
             await _service.UpdateCourseAsync(id, updateCourseDTO);
             return NoContent();
         }

@@ -1,7 +1,10 @@
 
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using SmartCertify.API.Filters;
 using SmartCertify.Application;
+using SmartCertify.Application.DTOsValidation;
 using SmartCertify.Application.Interfaces.Courses;
 using SmartCertify.Application.Services;
 using SmartCertify.Infrastructure;
@@ -22,12 +25,19 @@ namespace SmartCertify.API
                     providerOptions => providerOptions.EnableRetryOnFailure());
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            }).ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            //AutoMapper.Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
-            //builder.Services.AddAutoMapper(typeof(MappingProfile));
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateCourseValidator>();
+
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ICourseService, CourseService>();
 

@@ -16,6 +16,7 @@ namespace SmartCertify.Application
 
         public static CourseDTO MapToCourseDTO(Course course) => new()
         {
+            CourseId = course.CourseId,
             Title = course.Title,
             Description = course.Description,
         };
